@@ -11,7 +11,7 @@ load_dotenv()
 
 url = os.getenv('URL')
 playlist_id = os.getenv('PLAYLIST_ID')
-day_difference = int(os.getenv('DAY_DIFFERENCE'))
+day_difference = int(os.getenv('DAY_DIFF'))
 
 while True:
     sleep(60)
