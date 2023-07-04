@@ -11,6 +11,7 @@ load_dotenv()
 
 url = os.getenv('URL')
 playlist_id = os.getenv('PLAYLIST_ID')
+day_difference = int(os.getenv('DAY_DIFFERENCE'))
 
 while True:
     sleep(60)
@@ -46,7 +47,7 @@ while True:
         case 'year':
             release_date = datetime.strptime(results['tracks']['items'][0]['album']['release_date'], '%Y')
 
-    if (datetime.now() - release_date).days > int(os.getenv('DAY_DIFF')):
+    if (datetime.now() - release_date).days > day_difference:
         print(f'Song {data["trackName"]} by {data["artistName"]} is too old')
         continue
 
@@ -60,3 +61,4 @@ while True:
         continue
 
     spotify.playlist_add_items(playlist_id, [playing_track_id])
+    print(f'Song {data["trackName"]} by {data["artistName"]} added to the playlist')
