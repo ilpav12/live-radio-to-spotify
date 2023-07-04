@@ -17,7 +17,7 @@ while True:
     response = requests.get(url)
     data = response.json()
 
-    if not data['isSong']:
+    if not data['trackName'].strip():
         print('There is no song playing at the moment')
         continue
 
@@ -36,6 +36,18 @@ while True:
         with open("log.txt", "a") as file:
             file.write(f'{datetime.now().strftime("%d/%m/%Y %H:%M:%S")} Song {data["trackName"]} '
                        f'by {data["artistName"]} not found\n')
+        continue
+
+    match results['tracks']['items'][0]['album']['release_date_precision']:
+        case 'day':
+            release_date = datetime.strptime(results['tracks']['items'][0]['album']['release_date'], '%Y-%m-%d')
+        case 'month':
+            release_date = datetime.strptime(results['tracks']['items'][0]['album']['release_date'], '%Y-%m')
+        case 'year':
+            release_date = datetime.strptime(results['tracks']['items'][0]['album']['release_date'], '%Y')
+
+    if (datetime.now() - release_date).days > int(os.getenv('DAY_DIFF')):
+        print(f'Song {data["trackName"]} by {data["artistName"]} is too old')
         continue
 
     playing_track_id = results['tracks']['items'][0]['id']
