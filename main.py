@@ -19,7 +19,7 @@ while True:
     data = response.json()
 
     if not data['trackName'].strip():
-        print('There is no song playing at the moment')
+        print(f'{datetime.now().strftime("%d/%m/%Y %H:%M:%S")} There is no song playing at the moment')
         continue
 
     try:
@@ -33,7 +33,7 @@ while True:
                              market=os.getenv('MARKET'))
 
     if not results['tracks']['items']:
-        print(f'Song {data["trackName"]} by {data["artistName"]} not found')
+        print(f'{datetime.now().strftime("%d/%m/%Y %H:%M:%S")} Song {data["trackName"]} by {data["artistName"]} not found')
         with open("log.txt", "a") as file:
             file.write(f'{datetime.now().strftime("%d/%m/%Y %H:%M:%S")} Song {data["trackName"]} '
                        f'by {data["artistName"]} not found\n')
@@ -48,7 +48,7 @@ while True:
             release_date = datetime.strptime(results['tracks']['items'][0]['album']['release_date'], '%Y')
 
     if (datetime.now() - release_date).days > day_difference:
-        print(f'Song {data["trackName"]} by {data["artistName"]} is too old')
+        print(f'{datetime.now().strftime("%d/%m/%Y %H:%M:%S")} Song {data["trackName"]} by {data["artistName"]} is too old')
         continue
 
     playing_track_id = results['tracks']['items'][0]['id']
@@ -57,8 +57,8 @@ while True:
     current_playlist_track_ids = [track['track']['id'] for track in current_playlist_tracks]
 
     if playing_track_id in current_playlist_track_ids:
-        print(f'Song {data["trackName"]} by {data["artistName"]} is already present in the playlist')
+        print(f'{datetime.now().strftime("%d/%m/%Y %H:%M:%S")} Song {data["trackName"]} by {data["artistName"]} is already present in the playlist')
         continue
 
     spotify.playlist_add_items(playlist_id, [playing_track_id])
-    print(f'Song {data["trackName"]} by {data["artistName"]} added to the playlist')
+    print(f'{datetime.now().strftime("%d/%m/%Y %H:%M:%S")} Song {data["trackName"]} by {data["artistName"]} added to the playlist')
